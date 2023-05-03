@@ -43,6 +43,7 @@ namespace ariel
             Point getLocation() const{return this->location;}
             void lose(int lives){this-> lives-= lives;}
             virtual string print() const ;
+            virtual void attack(Character* character){}
             void Print() const {cout << *this <<endl;}
 
             //output
@@ -62,9 +63,10 @@ namespace ariel
             
             // Getter for balls
             int getBalls() const { return balls; }
-            void shoot( Character* enemy);
+            bool shoot( Character* enemy);
             bool hasboolets(){return this->balls>0;}
             void reload(){this->balls = 6;}
+            void attack(Character* enemy);
             string print() const;
         };
 
@@ -76,7 +78,8 @@ namespace ariel
             // Constructor
             Ninja(const string& name, const Point& location,int lives, int speed) : Character(location, lives, name), speed(speed) {}
             void move(const Character* enemy) { this->location = moveTowards(this->location,enemy->getLocation(),this->speed); }
-            void slash(Character* enemy) const;
+            bool slash(Character* enemy) const;
+            void attack(Character* enemy);
             string print() const ;
         };
     class YoungNinja  : public Ninja {
@@ -105,13 +108,17 @@ namespace ariel
             Character *leader;
             int alives;
         public:
-            Team(Character* leader):leader(leader) , alives(1){}
+            Team(Character* leader):leader(leader) , alives(1){this->add(leader);}
             void add(Character *character);
              //output
             friend ostream &operator <<(ostream &stream, const Team &Character);
             void print() const {cout << *this <<endl;}
-            bool stillAlive() const{return alives>0;}
-            void attack (Team*enemy){enemy->alives--;}
+            bool stillAlive() const;
+            Character* getLeader();
+            Character* getClosest() const;
+            virtual Character* getVictim(Team* enemy) {return enemy ->getClosest();}
+            void UpdateLeader() ;
+            void attack (Team*enemy);
 
 
 
