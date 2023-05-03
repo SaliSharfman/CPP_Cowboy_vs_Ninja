@@ -19,18 +19,31 @@ string Cowboy :: print() const{
 string Ninja :: print() const{
     return "N "+Character::print();
 }
+void Cowboy :: attack(Character *character){
+    if(!this->shoot(character))
+        this->reload();
+}
+void Ninja :: attack(Character *character){
+    if(!this->slash(character))
+        this->move(character);
+}
 
 ostream &ariel::operator <<(ostream &os, const Character &character) {
     os << character.print();
     return os;
 }
-void Cowboy:: shoot(Character* enemy){
+bool Cowboy:: shoot(Character* enemy){
     if( this-> isAlive() && this->hasboolets()){
         enemy->lose(10);
         this->balls--;
+        return 1;
     }
+    return 0;
 }
-void Ninja:: slash(Character* enemy) const{
-    if (this->isAlive() && this->distance(enemy)<1)
+bool Ninja:: slash(Character* enemy) const{
+    if (this->isAlive() && this->distance(enemy)<1){
         enemy->lose(31);
+        return 1;
+    }
+    return 0;
 }
