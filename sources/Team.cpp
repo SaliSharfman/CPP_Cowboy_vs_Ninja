@@ -20,38 +20,38 @@ void Team:: add(Character* character) {
 
 bool Team :: stillAlive() const{
     int alives =0;
-    for (auto item : this->characters) 
-        alives += item-> isAlive();
+    for (auto character : this->characters) 
+        alives += character-> isAlive();
     return alives;
 }
 Character* Team:: getLeader() {
-    if(this -> leader -> isAlive())
-        return this -> leader;
-    this -> leader = this -> getClosest();
+    this-> UpdateLeader();
     return this -> leader;
 }
 Character* Team:: getClosest() const{
     double mindist = DBL_MAX;
     Character * closest = this -> leader;
-    for (auto item : this->characters) 
-        if(item-> isAlive() && item!= this ->leader && item -> distance(this->leader)<mindist){
-            closest = item;
-            mindist = item -> distance(this->leader);
+    for (auto character : this->characters) 
+        if(character-> isAlive() && character!= this ->leader && character -> distance(this->leader)<mindist){
+            closest = character;
+            mindist = character -> distance(this->leader);
         }
     return closest;
 }
 
 void Team :: attack (Team*enemy){
-    Character * victim = enemy->getVictim(enemy);
     for (Character* character : this->characters){
-        if (Cowboy* cowboy = dynamic_cast<Cowboy*>(character))
+        if (Cowboy* cowboy = dynamic_cast<Cowboy*>(character)){
             enemy -> UpdateLeader();
-            character -> attack(victim);
+            character -> attack(this->getVictim(enemy));
+        }
+
     }
     for (Character* character : this->characters){
-        if (Ninja* ninja = dynamic_cast<Ninja*>(character))
+        if (Ninja* ninja = dynamic_cast<Ninja*>(character)){
             enemy -> UpdateLeader();
-            character -> attack(victim);
+            character -> attack(this->getVictim(enemy));
+        }
     }
     
     
@@ -60,9 +60,13 @@ void Team :: attack (Team*enemy){
 
 
 ostream &ariel::operator <<(ostream &os, const Team &team) {
-    os << "Leader: " << team.leader ->getName() << '\n'<<"Participants: ";
+    if(team.stillAlive())
+        os << "Leader: " << team.leader ->getName();
+    else
+        os << "All Dead";
+    os << '\n'<<"Participants: ";
     for (auto item : team.characters) {
-        os << *item << ", ";
-    }
+            os << *item << ", ";
+        }
     return os;
 }
