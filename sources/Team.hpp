@@ -124,6 +124,14 @@ namespace ariel
 
 
      };
+     class Team2  : public Team {
+        public:
+            Team2(Character* leader): Team(leader) {}
+     };
 
+    class SmartTeam  : public Team {
+        public:
+            SmartTeam(Character* leader): Team(leader) {}
+     };
 
 }
