@@ -41,7 +41,7 @@ namespace ariel
             double distance(const Character *other) const{return this->location.distance(other->location);}
             string getName() const{return this->name;}
             Point getLocation() const{return this->location;}
-            void lose(int lives){this-> lives-= lives;}
+            void lose(int lives);
             virtual string print() const ;
             virtual void attack(Character* character){}
             void Print() const {cout << *this <<endl;}
@@ -65,7 +65,7 @@ namespace ariel
             int getBalls() const { return balls; }
             bool shoot( Character* enemy);
             bool hasboolets(){return this->balls>0;}
-            void reload(){this->balls = 6;}
+            void reload();
             void attack(Character* enemy);
             string print() const;
         };
@@ -77,7 +77,7 @@ namespace ariel
         public:
             // Constructor
             Ninja(const string& name, const Point& location,int lives, int speed) : Character(location, lives, name), speed(speed) {}
-            void move(const Character* enemy) { this->location = moveTowards(this->location,enemy->getLocation(),this->speed); }
+            void move(const Character* enemy);
             bool slash(Character* enemy) const;
             void attack(Character* enemy);
             string print() const ;
@@ -106,32 +106,35 @@ namespace ariel
         protected:
             list<Character *> characters{};
             Character *leader;
-            int alives;
         public:
-            Team(Character* leader):leader(leader) , alives(1){this->add(leader);}
-            void add(Character *character);
+            Team(Character* leader):leader(leader) {this->add(leader);}
+            void print() const {cout << *this <<endl;}
              //output
             friend ostream &operator <<(ostream &stream, const Team &Character);
-            void print() const {cout << *this <<endl;}
+            void add(Character *character);
             bool stillAlive() const;
             Character* getLeader();
-            Character* getClosest() const;
-            virtual Character* getVictim(Team* enemy) {return enemy ->getClosest();}
-            void UpdateLeader() ;
+            void UpdateLeader();
+            list<Character *> getCharacters() const{return this-> characters;}
+            Character* getClosest(Team* other) const;
             void attack (Team*enemy);
-
-
+            virtual list<Character *> get_sorted(list<Character *> characters) const;
+            virtual Character* getVictim(Team* enemy) {return this ->getClosest(enemy);}
+            
 
 
      };
      class Team2  : public Team {
         public:
             Team2(Character* leader): Team(leader) {}
+            Character* getVictim(Team* enemy) {return this ->getClosest(enemy);}
+            list<Character *> get_sorted(list<Character *> characters) const {return characters;}
      };
 
     class SmartTeam  : public Team {
         public:
             SmartTeam(Character* leader): Team(leader) {}
+            Character* getVictim(Team* enemy) {return this ->getClosest(enemy);}
      };
 
 }
