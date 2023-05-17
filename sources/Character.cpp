@@ -6,17 +6,17 @@ using namespace ariel;
 
 
 
-void Character :: lose(int lives){
-    this-> lives-= lives;
-    if(this-> lives <0)
-        this-> lives = 0;
+void Character :: lose(int hitingPoints){
+    this-> hitingPoints-= hitingPoints;
+    if(this-> hitingPoints <0)
+        this-> hitingPoints = 0;
     if(!this-> isAlive())
         cout<< this->name << " died."<<endl;
 }
 string Character :: print() const{
     if (this->isAlive())
-        return this->name + " lives: " + to_string(this->lives) + ", location: " + this->location.print();
-    return "(" + this->name + ") location: " + this->location.print();
+        return this->name + " Hiting Points: " + to_string(this->hitingPoints) + ", Location: " + this->location.print();
+    return "(" + this->name + ") Location: " + this->location.print();
     
 }
 string Cowboy :: print() const{
@@ -45,20 +45,20 @@ void Cowboy:: reload(){
     this->balls = 6;
 }
 bool Cowboy:: shoot(Character* enemy){
-    int lives =10;
+    int hitingPoints =10;
     if( this-> isAlive() && this->hasboolets()){
-        enemy->lose(lives);
-        cout << "Cowboy "<<this->name <<"("<<this-> balls<<" bullets) shot "<< enemy->getName()<< "(-"<<lives<<")."<<endl;
+        cout << "Cowboy "<<this->name <<"("<<this-> balls<<" bullets) shot "<< enemy->getName()<< "(-"<<hitingPoints<<")."<<endl;
         this->balls--;
+        enemy->lose(hitingPoints);
         return 1;
     }
     return 0;
 }
 bool Ninja:: slash(Character* enemy) const{
-    int lives =31;
+    int hitingPoints =40;
     if (this->isAlive() && this->distance(enemy)<1){
-        cout << "Ninja "<<this->name<< " slashed "<< enemy->getName()<< "(-"<<lives<<")."<<endl;
-        enemy->lose(lives);
+        cout << "Ninja "<<this->name<< " slashed "<< enemy->getName()<< "(-"<<hitingPoints<<")."<<endl;
+        enemy->lose(hitingPoints);
         return 1;
     }
     return 0;

@@ -9,14 +9,17 @@ namespace ariel
 {
     class Point{
         private:
-            double x, y;
+            double point_x, point_y;
 
         public:
-            Point():x(0.0), y(0.0){}
-            Point(const double &x,const double &y):x(x), y(y){}
+            Point():point_x(0.0), point_y(0.0){}
+            Point(const double point_x ):point_x(point_x), point_y(0.0){}
+            Point(const double &point_x,const double &point_y):point_x(point_x), point_y(point_y){}
             double distance(const Point &other) const;
             friend Point moveTowards (const Point src, const Point dest, const double &dist);
             void Print() const {cout << *this <<endl;}
+            //equals
+            bool operator ==(const Point &other) const{return this->point_x == other.point_x && this->point_y == other.point_y;} 
         
             //output
             string print() const;
@@ -31,17 +34,18 @@ namespace ariel
     class Character{
         protected:
             Point location;
-            int lives;
+            int hitingPoints;
             string name;
 
         public:
             Character(){}
-            Character(const Point &location,const int &lives, const string name):location(location), lives(lives), name(name){}
-            bool isAlive() const{return this->lives>0;}
+            Character(const Point &location,const int &hitingPoints, const string name):location(location), hitingPoints(hitingPoints), name(name){}
+            bool isAlive() const{return this->hitingPoints>0;}
             double distance(const Character *other) const{return this->location.distance(other->location);}
             string getName() const{return this->name;}
+            int getHp() const{return this->hitingPoints;}
             Point getLocation() const{return this->location;}
-            void lose(int lives);
+            void lose(int hitingPoints);
             virtual string print() const ;
             virtual void attack(Character* character){}
             void Print() const {cout << *this <<endl;}
@@ -76,7 +80,8 @@ namespace ariel
         
         public:
             // Constructor
-            Ninja(const string& name, const Point& location,int lives, int speed) : Character(location, lives, name), speed(speed) {}
+            Ninja(const string& name, const Point& location,int hitingPoints, int speed) : Character(location, hitingPoints, name), speed(speed) {}
+            int getSpeed() const{return this-> speed;}
             void move(const Character* enemy);
             bool slash(Character* enemy) const;
             void attack(Character* enemy);
@@ -134,7 +139,10 @@ namespace ariel
     class SmartTeam  : public Team {
         public:
             SmartTeam(Character* leader): Team(leader) {}
-            Character* getVictim(Team* enemy) {return this ->getClosest(enemy);}
+            Character* getBestByCowboy(Team* enemy);
+            Character* getBestByNinja(Team* enemy);
+            Character* getVictim(Team* enemy);
+            int CowboySum() const;
      };
 
 }
