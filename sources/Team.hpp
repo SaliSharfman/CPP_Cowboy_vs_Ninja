@@ -16,7 +16,7 @@ namespace ariel
             Point(const double point_x ):point_x(point_x), point_y(0.0){}
             Point(const double &point_x,const double &point_y):point_x(point_x), point_y(point_y){}
             double distance(const Point &other) const;
-            friend Point moveTowards (const Point src, const Point dest, const double &dist);
+            static Point moveTowards (const Point src, const Point dest, const double &dist);
             void Print() const {cout << *this <<endl;}
             //equals
             bool operator ==(const Point &other) const{return this->point_x == other.point_x && this->point_y == other.point_y;} 
@@ -35,17 +35,22 @@ namespace ariel
         protected:
             Point location;
             int hitingPoints;
+            bool captain, busy;
             string name;
 
         public:
             Character(){}
-            Character(const Point &location,const int &hitingPoints, const string name):location(location), hitingPoints(hitingPoints), name(name){}
+            Character(const Point &location,const int &hitingPoints, const string name):busy(0),captain(0),location(location), hitingPoints(hitingPoints), name(name){}
             bool isAlive() const{return this->hitingPoints>0;}
+            bool isCaptain() const{return this->captain;}
+            bool isBusy() const{return this-> busy;}
+            void makeCaptain();
+            void makeBusy();
             double distance(const Character *other) const{return this->location.distance(other->location);}
             string getName() const{return this->name;}
             int getHp() const{return this->hitingPoints;}
             Point getLocation() const{return this->location;}
-            void lose(int hitingPoints);
+            void hit(int hitingPoints);
             virtual string print() const ;
             virtual void attack(Character* character){}
             void Print() const {cout << *this <<endl;}
@@ -110,16 +115,16 @@ namespace ariel
      class Team {
         protected:
             list<Character *> characters{};
-            Character *leader;
+            Character *captain;
         public:
-            Team(Character* leader):leader(leader) {this->add(leader);}
+            Team(Character* captain):captain(captain) { captain->makeCaptain(); this->add(captain);}
             void print() const {cout << *this <<endl;}
              //output
             friend ostream &operator <<(ostream &stream, const Team &Character);
             void add(Character *character);
-            bool stillAlive() const;
-            Character* getLeader();
-            void UpdateLeader();
+            int stillAlive() const;
+            Character* getCaptain();
+            void updateCaptain();
             list<Character *> getCharacters() const{return this-> characters;}
             Character* getClosest(Team* other) const;
             void attack (Team*enemy);
@@ -131,14 +136,14 @@ namespace ariel
      };
      class Team2  : public Team {
         public:
-            Team2(Character* leader): Team(leader) {}
+            Team2(Character* captain): Team(captain) {}
             Character* getVictim(Team* enemy) {return this ->getClosest(enemy);}
-            list<Character *> get_sorted(list<Character *> characters) const {return characters;}
+            list<Character *> get_sorted(list<Character *> charlst) const {return charlst;}
      };
 
     class SmartTeam  : public Team {
         public:
-            SmartTeam(Character* leader): Team(leader) {}
+            SmartTeam(Character* captain): Team(captain) {}
             Character* getBestByCowboy(Team* enemy);
             Character* getBestByNinja(Team* enemy);
             Character* getVictim(Team* enemy);

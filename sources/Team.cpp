@@ -8,7 +8,7 @@ using namespace ariel;
 
 ostream &ariel::operator <<(ostream &os, const Team &team) {
     if(team.stillAlive())
-        os << "Leader: " << team.leader ->getName();
+        os << "Captain: " << team.captain->getName();
     else
         os << "All Dead";
     os << '\n'<<"Participants: ";
@@ -20,55 +20,77 @@ ostream &ariel::operator <<(ostream &os, const Team &team) {
 }
 
 void Team:: add(Character* character) {
-    if (this->characters.size()<9){
+    if (this->characters.size()<10){
+        character->makeBusy();
         this->characters.push_back(character);
     }
+    else throw runtime_error("The team is full!");
 }
 
-bool Team :: stillAlive() const{
+int Team :: stillAlive() const{
     int alives =0;
     for (auto character : this->characters) 
         alives += character-> isAlive();
     return alives;
 }
 
-Character* Team:: getLeader() {
-    this-> UpdateLeader();
-    return this -> leader;
+Character* Team:: getCaptain() {
+    this-> updateCaptain();
+    return this -> captain;
 }
-void Team:: UpdateLeader() {
-    if(!this->leader->isAlive())
+void Team:: updateCaptain() {
+    if(!this->captain->isAlive()&&this->stillAlive())
     {
-        Character* newleader = this -> getClosest(this);
-        if(newleader != this -> leader){
-            cout << "Leader changed from "<<this-> leader-> getName() << " to "<<newleader ->getName() << endl;
-            this -> leader = this -> getClosest(this);
+        Character* newcaptain = this -> getClosest(this);
+        if(newcaptain != this -> captain){
+            cout << "Captain changed from "<<this-> captain-> getName() << " to "<<newcaptain ->getName() << endl;
+            this -> captain = this -> getClosest(this);
+            this->captain->makeCaptain();
         }
     }
 }
 
 
-Character* Team:: getClosest(Team* other) const{
-    double mindist = DBL_MAX;
-    Character * closest = other -> leader;
-    list<Character *> characters =this->get_sorted(other-> getCharacters());
-    for (Character* character :characters)
-        if(character-> isAlive() && character!= other ->leader && character -> distance(other->leader)<mindist){
-            closest = character;
-            mindist = character -> distance(other->leader);
-        }
+Character* Team:: getClosest(Team* other) const
+{
+    Character * closest = nullptr;
+    if(!other->stillAlive()){
+        throw runtime_error("all dead.");
+    }
+    else{
+        double mindist = DBL_MAX;
+        list<Character *> characters =this->get_sorted(other-> getCharacters());
+        for (Character* character :characters)
+            if(character-> isAlive() &&  character -> distance(this->captain)<mindist){
+                closest = character;
+                mindist = character -> distance(this->captain);
+            }
+    }
     return closest;
 }
 
 void Team :: attack (Team*enemy){
+    if(enemy == nullptr){
+        throw invalid_argument("enemy should be a pointer to a Team.");
+        return;
+    }
+    if(!this->stillAlive()){
+        throw runtime_error("dead team cant attack.");
+        return;
+    }
+    if(!enemy->stillAlive()){
+        throw runtime_error("dead team cant be attacked.");
+        return;
+    }
+    this -> updateCaptain();
     Character* victim = this->getVictim(enemy);
     list<Character *> characters =this->get_sorted(this-> getCharacters());
     for (Character* character :characters){
-        enemy -> UpdateLeader();
-        if(!victim-> isAlive())
-            victim = this->getVictim(enemy);
-        character -> attack(victim);
-        enemy -> UpdateLeader();
+        if(enemy->stillAlive()){
+            if(!victim-> isAlive())
+                victim = this->getVictim(enemy);
+            character -> attack(victim);
+        }
     }
 }
 

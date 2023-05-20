@@ -12,7 +12,11 @@ double Point:: distance (const Point &other) const{
     return dist;
 }
 
-Point ariel::moveTowards (const Point src, const Point dest, const double &dist){
+Point Point::moveTowards (const Point src, const Point dest, const double &dist){
+    if(dist<0){
+        throw invalid_argument("Distance should be a positive number.");
+        return src;
+    }
     double real_dist = src.distance(dest);
     if (real_dist<=dist)
         return dest;
