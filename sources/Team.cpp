@@ -148,7 +148,7 @@ Character* SmartTeam:: getVictim(Team* enemy){
     Character* victim = this-> getBestByCowboy(enemy);
     if(victim)
         return victim;
-    return this ->getClosest(enemy);
+    return this -> getBestByNinja(enemy);
 }
             
 
