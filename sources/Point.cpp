@@ -1,6 +1,7 @@
-#include "Team.hpp"
+#include "Point.hpp"
 #include <iostream>
 #include <cmath>
+
 using namespace std;
 using namespace ariel;
 
@@ -34,26 +35,4 @@ string Point :: print() const{
 ostream &ariel::operator <<(ostream &os, const Point &point) {
     os << point.print();
     return os;
-}
-
-
-istream &ariel::operator >>(istream &is,  Point &point){
-    double x, y;
-    char delimiter;
-
-    if (!(is >> x)) {
-        throw runtime_error("Error: Invalid input for x.");
-    }
-
-     is >> ws; // Skip leading whitespace
-
-    // Check if there is a delimiter
-    if (!is.eof() && (is.peek() == ',' || is.peek() == ' ')) 
-        is >> delimiter;
-
-    if (!(is >> y)) {
-        throw runtime_error("Error: Invalid input for y.");
-    }
-    point = Point(x, y);
-    return is;
 }

@@ -1,4 +1,5 @@
 #include "Team.hpp"
+#include "Character.hpp"
 #include <iostream>
 #include <cmath>
 #include <cfloat>
