@@ -40,9 +40,12 @@ namespace ariel
         public:
             SmartTeam(Character* captain): Team(captain) {}
             Character* getBestByCowboy(Team* enemy);
-            Character* getBestByNinja(Team* enemy);
             Character* getVictim(Team* enemy);
             int CowboySum() const;
+            int hpAfterNinjaAttack(Character* victim) const;
+            int roundsToSlash(Character* victim) const;
+            Character* BestSlash(Team* enemy) const;
+            Character* BestPosition(Team* enemy) const;
      };
 
 }
