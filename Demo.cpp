@@ -28,18 +28,28 @@ int main() {
     sushi->move(tom);
     sushi->slash(tom);
 
-    Team team_A(tom); 
+    SmartTeam team_A(tom); 
     team_A.add(new YoungNinja("Yogi", Point(64,57)));
 
     // Team b(tom); should throw tom is already in team a
 
      Team team_B(sushi);
      team_B.add(new TrainedNinja("Hikari", Point(12,81)));
-
+     team_B.add(new Cowboy("yoram", b));
+     team_B.add(new OldNinja("roi", a));
+     team_B.add(new Cowboy("yani", Point(80,80)));
+     Character* george = new YoungNinja("george", Point(75,100));
+     team_B.add(george);
+     team_A.add(new TrainedNinja("ronit", Point(12,81)));
+     team_A.add(new Cowboy("LEVI", Point(20,20)));
+     team_A.add(new OldNinja("cohen", Point(3,4)));
+     team_A.add(new Cowboy("bernardo", Point(60,90)));
+     team_A.add(new YoungNinja("jaklin", Point(75,10)));
 
      while(team_A.stillAlive() > 0 && team_B.stillAlive() > 0){
         team_A.attack(&team_B);
-        team_B.attack(&team_A);
+        if(team_A.stillAlive() > 0 && team_B.stillAlive() > 0)
+         team_B.attack(&team_A);
         team_A.print();
         team_B.print();
      }
