@@ -11,17 +11,17 @@ namespace ariel
     
 
     class Ninja : public Character {
-        protected:
+        private:
             int speed;
         
         public:
             // Constructor
-            Ninja(const string& name, const Point& location,int hitingPoints, int speed) : Character(location, hitingPoints, name), speed(speed) {}
+            Ninja(const string& name, const int hitingPoints, const Point& location, const int speed) : Character(location, hitingPoints, name), speed(speed) {}
             int getSpeed() const{return this-> speed;}
             void move(const Character* enemy);
             bool slash(Character* enemy) const;
-            void attack(Character* enemy);
-            string print() const ;
+            void attack(Character* enemy)override;
+            string print() const override;
         };
 
      

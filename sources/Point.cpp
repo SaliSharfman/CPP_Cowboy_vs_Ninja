@@ -13,7 +13,7 @@ double Point:: distance (const Point &other) const{
     return dist;
 }
 
-Point Point::moveTowards (const Point src, const Point dest, const double &dist){
+Point Point::moveTowards (Point src, Point dest, const double &dist){
     if(dist<0){
         throw invalid_argument("Distance should be a positive number.");
         return src;

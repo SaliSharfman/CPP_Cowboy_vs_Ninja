@@ -20,8 +20,8 @@ void Cowboy:: reload(){
         throw runtime_error("Dead cowboy can not reload");
         return;
     }
-    cout << "Cowboy "<<this->name <<" reloaded 6 bullets."<<endl;
-    this->balls = 6;
+    cout << "Cowboy "<<this->getName() <<" reloaded 6 bullets."<<endl;
+    this->bullets = 6;
 }
 bool Cowboy:: shoot(Character* enemy){
     if(!this-> isAlive()){
@@ -39,9 +39,9 @@ bool Cowboy:: shoot(Character* enemy){
     }
 
     if(this-> hasboolets()){
-       int hitingPoints =10;
-       // cout << "Cowboy "<<this->name <<"("<<this-> balls<<" bullets) shot "<< enemy->getName()<< "(-"<<hitingPoints<<")."<<endl;
-        this->balls--;
+        int hitingPoints =10;
+        cout << "Cowboy "<<this->getName() <<"("<<this-> bullets<<" bullets) shot "<< enemy->getName()<< "(-"<<hitingPoints<<")."<<endl;
+        this->bullets--;
         enemy->hit(hitingPoints);
         return 1;
     }

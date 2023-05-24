@@ -33,7 +33,7 @@ bool Ninja:: slash(Character* enemy) const{
     }
     if (this->distance(enemy)<1){
         int hitingPoints =40;
-       // cout << "Ninja "<<this->name<< " slashed "<< enemy->getName()<< "(-"<<hitingPoints<<")."<<endl;
+        cout << "Ninja "<<this->getName()<< " slashed "<< enemy->getName()<< "(-"<<hitingPoints<<")."<<endl;
         enemy->hit(hitingPoints);
         return 1;
     }
@@ -51,7 +51,7 @@ void Ninja :: move(const Character* enemy) {
         throw runtime_error(enemy->getName()+" is dead.");
     }
 
-    Point src = this->location;
-    this->location = Point::moveTowards(this->location,enemy->getLocation(),this->speed);
-    //cout << "Ninja "<<this->name <<" moved "<< this-> location.distance(src)<<" to "<< enemy->getName()<<endl;
+    Point src = this->getLocation();
+    this->setLocation(Point::moveTowards(this->getLocation(),enemy->getLocation(),this->speed));
+    cout << "Ninja "<<this->getName() <<" moved "<< this-> getLocation().distance(src)<<" to "<< enemy->getName()<<endl;
 }
