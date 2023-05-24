@@ -97,30 +97,44 @@ Character* SmartTeam:: getVictim(Team* enemy){
         return victim;
     return this-> getWeak(enemy-> getCharacters());
 }
-vector<Character *> SmartTeam:: get_sorted(Team* team) const{ 
-    vector<Character *> characters = team-> getCharacters();
-    int amount = team->getAmount();
-    if(!amount||amount<=0||!this-> NinjaSum())
-        return characters;
-    
 
-   //bool selected[amount] = {false};
-    vector<Character *> sorted{};
-    for (Character* character : characters){
-        if (Cowboy* cowboy = dynamic_cast<Cowboy*>(character)){
-            sorted.push_back(character);
-        }
+vector<Character *> SmartTeam:: slashfirst(vector<Character *> &characters, Character* victim) const{ 
+    int j=0;
+    for (int i =0;i<characters.size();i++)
+        if (Ninja* ninja = dynamic_cast<Ninja*>(characters[static_cast<std::vector<Character*>::size_type>(i)]))
+            if(ninja-> distance(victim)<1){
+                swap(characters[static_cast<std::vector<Character*>::size_type>(i)], characters[static_cast<std::vector<Character*>::size_type>(j)]);
 
-    }
-    for (Character* character : characters){
-        if (Ninja* ninja = dynamic_cast<Ninja*>(character)){
-            sorted.push_back(character);
-        }
-    }
-    return sorted;
-
+                j++;
+            }
+    return characters;
 }
-            
+void SmartTeam :: attack (Team*enemy){
+    if(enemy == nullptr){
+        throw invalid_argument("enemy should be a pointer to a Team.");
+        return;
+    }
+    if(!this->stillAlive()){
+        throw runtime_error("dead team cant attack.");
+        return;
+    }
+    if(!enemy->stillAlive()){
+        throw runtime_error("dead team cant be attacked.");
+        return;
+    }
+    this -> updateCaptain();
+    Character* victim = this->getVictim(enemy);
+    vector<Character *> characters = this->get_sorted(this);
+    characters = this->slashfirst(characters, victim);
+    for (Character* character :characters){
+        if(enemy->stillAlive()){
+            if(!victim-> isAlive())
+                victim = this->getVictim(enemy);
+            character -> attack(victim);
+        }
+    }
+}
+         
 
 
 

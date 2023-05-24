@@ -37,7 +37,7 @@ namespace ariel
             void updateCaptain();
             vector<Character *> getCharacters() const{return this-> characters;}
             Character* getClosest(Team* other) const;
-            void attack (Team*enemy);
+            virtual void attack (Team*enemy);
             virtual vector<Character *> get_sorted(Team* team) const;
             virtual Character* getVictim(Team* enemy) {return this ->getClosest(enemy);}
             
@@ -49,13 +49,15 @@ namespace ariel
         public:
             SmartTeam(Character* captain): Team(captain) {}
             Character* getVictim(Team* enemy) override;
-            vector<Character *> get_sorted(Team* team) const override;
+            //vector<Character *> get_sorted(Team* team) const override;
+            vector<Character *> slashfirst(vector<Character *> &characters, Character* victim) const;
             int hpAfterNinjaAttack(Character* victim) const;
             int roundsToSlash(Character* victim) const;
             Character* getBestByCowboy(vector<Character *> characters);
             Character* BestSlash(vector<Character *> characters) const;
             Character* BestPosition(vector<Character *> characters) const;
             Character* getWeak(vector<Character *> characters) const;
+            void attack (Team*enemy) override;
             
      };
 
